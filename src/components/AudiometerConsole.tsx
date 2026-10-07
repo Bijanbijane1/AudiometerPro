@@ -197,55 +197,72 @@ export const AudiometerConsole: React.FC<AudiometerConsoleProps> = ({
   const currentThresholds = selectedEar === 'right' ? rightThresholds : leftThresholds;
   const recordedVal = currentThresholds[currentFreq];
 
+  // Frequency navigation helpers
+  const handlePrevFreq = () => {
+    const currentIndex = STANDARD_FREQUENCIES.indexOf(currentFreq);
+    if (currentIndex > 0) {
+      setCurrentFreq(STANDARD_FREQUENCIES[currentIndex - 1]);
+    }
+  };
+
+  const handleNextFreq = () => {
+    const currentIndex = STANDARD_FREQUENCIES.indexOf(currentFreq);
+    if (currentIndex < STANDARD_FREQUENCIES.length - 1) {
+      setCurrentFreq(STANDARD_FREQUENCIES[currentIndex + 1]);
+    }
+  };
+
   return (
-    <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs">
+    <div className="bg-white rounded-xl border border-slate-200 p-3.5 sm:p-5 shadow-xs">
       {/* Header bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 border-b border-slate-100">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 sm:pb-4 mb-4 border-b border-slate-100">
         <div className="flex items-center gap-2">
-          <div className="p-2 rounded-lg bg-teal-50 text-teal-700">
+          <div className="p-2 rounded-lg bg-teal-50 text-teal-700 shrink-0">
             <Headphones className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-base font-bold text-slate-900">کنسول شبیه‌ساز ادیومتر بالینی</h2>
-            <p className="text-xs text-slate-500">کنترل دقیق فرکانس و شدت صوت با خروجی استریو و استانداردهای PTA</p>
+            <h2 className="text-sm sm:text-base font-bold text-slate-900">کنسول شبیه‌ساز ادیومتر بالینی</h2>
+            <p className="text-[11px] sm:text-xs text-slate-500">ارزیابی دقیق آستانه شنوایی با استاندارد Pure-Tone Audiometry</p>
           </div>
         </div>
 
-        {/* Ear Toggle */}
-        <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-lg">
+        {/* Ear Toggle: Full width on mobile, inline on tablet & desktop */}
+        <div className="grid grid-cols-2 gap-1.5 p-1 bg-slate-100 rounded-xl w-full sm:w-auto">
           <button
+            type="button"
             onClick={() => setSelectedEar('right')}
-            className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-md transition-all ${
+            className={`flex items-center justify-center gap-1.5 py-2.5 sm:py-2 px-3 sm:px-4 text-xs font-bold rounded-lg transition-all ${
               selectedEar === 'right'
                 ? 'bg-red-600 text-white shadow-xs'
-                : 'text-slate-700 hover:text-red-700'
+                : 'text-slate-700 hover:text-red-700 hover:bg-slate-200/60'
             }`}
           >
             <span className="w-2.5 h-2.5 rounded-full bg-white inline-block"></span>
-            گوش راست (قرمز - O)
+            <span>گوش راست (O)</span>
           </button>
           <button
+            type="button"
             onClick={() => setSelectedEar('left')}
-            className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-md transition-all ${
+            className={`flex items-center justify-center gap-1.5 py-2.5 sm:py-2 px-3 sm:px-4 text-xs font-bold rounded-lg transition-all ${
               selectedEar === 'left'
                 ? 'bg-blue-600 text-white shadow-xs'
-                : 'text-slate-700 hover:text-blue-700'
+                : 'text-slate-700 hover:text-blue-700 hover:bg-slate-200/60'
             }`}
           >
             <span className="w-2.5 h-2.5 bg-white inline-block"></span>
-            گوش چپ (آبی - X)
+            <span>گوش چپ (X)</span>
           </button>
         </div>
       </div>
 
       {/* Diagnostic Hearing Type Selector */}
       {onHearingTypeChange && (
-        <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 mb-4 bg-slate-50 border border-slate-200 rounded-lg text-xs">
-          <div className="flex items-center gap-1.5 font-bold text-slate-800">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2.5 mb-4 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+          <div className="flex items-center gap-1.5 font-bold text-slate-800 shrink-0">
             <Stethoscope className="w-3.5 h-3.5 text-teal-600" />
-            <span>نوع پاتولوژی کم‌شنوایی (جهت تولید خودکار توصیه‌های درمانی):</span>
+            <span>نوع پاتولوژی کم‌شنوایی:</span>
           </div>
-          <div className="inline-flex rounded-lg bg-slate-200 p-0.5">
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap rounded-lg bg-slate-200 p-0.5 gap-0.5">
             {[
               { type: 'sensorineural', label: 'حسی-عصبی' },
               { type: 'conductive', label: 'هدایتی (گوش میانی)' },
@@ -254,8 +271,9 @@ export const AudiometerConsole: React.FC<AudiometerConsoleProps> = ({
             ].map(({ type, label }) => (
               <button
                 key={type}
+                type="button"
                 onClick={() => onHearingTypeChange(type as HearingType)}
-                className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
+                className={`py-1.5 px-2 text-center rounded-md text-[11px] sm:text-xs font-medium transition-all ${
                   hearingType === type
                     ? 'bg-white text-teal-900 font-bold shadow-xs'
                     : 'text-slate-600 hover:text-slate-900'
@@ -270,7 +288,7 @@ export const AudiometerConsole: React.FC<AudiometerConsoleProps> = ({
 
       {/* Automated Testing Banner / Runner */}
       {isAutoTesting ? (
-        <div className="bg-teal-50 border border-teal-200 rounded-xl p-5 mb-6 text-center animate-fadeIn">
+        <div className="bg-teal-50 border border-teal-200 rounded-xl p-4 sm:p-5 mb-5 text-center animate-fadeIn">
           <div className="flex items-center justify-between mb-3">
             <span className="inline-flex items-center gap-1.5 text-xs font-bold text-teal-800">
               <Zap className="w-4 h-4 text-teal-600" />
@@ -278,17 +296,17 @@ export const AudiometerConsole: React.FC<AudiometerConsoleProps> = ({
             </span>
             <button
               onClick={cancelAutoTest}
-              className="text-xs text-red-600 hover:text-red-800 font-medium px-2 py-1 rounded bg-white border border-red-200"
+              className="text-xs text-red-600 hover:text-red-800 font-medium px-2.5 py-1 rounded-lg bg-white border border-red-200"
             >
-              انصراف از تست خودکار
+              انصراف
             </button>
           </div>
 
           <div className="my-3">
-            <div className="text-lg font-bold text-slate-900 mb-1">
+            <div className="text-base sm:text-lg font-bold text-slate-900 mb-1">
               گوش {selectedEar === 'right' ? 'راست' : 'چپ'} · فرکانس {currentFreq} هرتز · شدت {currentDb} dB HL
             </div>
-            <p className="text-sm text-slate-700 font-medium">{autoStatusText}</p>
+            <p className="text-xs sm:text-sm text-slate-700 font-medium">{autoStatusText}</p>
           </div>
 
           {/* Sound animation */}
@@ -304,55 +322,78 @@ export const AudiometerConsole: React.FC<AudiometerConsoleProps> = ({
 
           {/* Response Buttons */}
           {autoWaitingResponse && (
-            <div className="flex justify-center gap-4 mt-4">
+            <div className="grid grid-cols-2 gap-3 max-w-md mx-auto mt-4">
               <button
+                type="button"
                 onClick={() => handleAutoResponse(true)}
-                className="flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-xl font-bold text-sm hover:bg-emerald-700 shadow-md transition-transform active:scale-95"
+                className="flex items-center justify-center gap-2 py-3 px-4 bg-emerald-600 text-white rounded-xl font-bold text-xs sm:text-sm hover:bg-emerald-700 shadow-md transition-transform active:scale-95"
               >
-                <Check className="w-5 h-5" />
-                بله، صدا را شنیدم
+                <Check className="w-4 h-4 sm:w-5 sm:h-5" />
+                بله، شنیدم
               </button>
               <button
+                type="button"
                 onClick={() => handleAutoResponse(false)}
-                className="flex items-center gap-2 px-6 py-3 bg-slate-700 text-white rounded-xl font-bold text-sm hover:bg-slate-800 shadow-md transition-transform active:scale-95"
+                className="flex items-center justify-center gap-2 py-3 px-4 bg-slate-700 text-white rounded-xl font-bold text-xs sm:text-sm hover:bg-slate-800 shadow-md transition-transform active:scale-95"
               >
-                <VolumeX className="w-5 h-5" />
-                خیر، صدایی نشنیدم
+                <VolumeX className="w-4 h-4 sm:w-5 sm:h-5" />
+                خیر، نشنیدم
               </button>
             </div>
           )}
         </div>
       ) : (
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-6 p-3 bg-slate-50 border border-slate-200 rounded-lg">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-5 p-2.5 sm:p-3 bg-slate-50 border border-slate-200 rounded-xl">
           <div className="flex items-center gap-2">
-            <Zap className="w-4 h-4 text-teal-600" />
+            <Zap className="w-4 h-4 text-teal-600 shrink-0" />
             <span className="text-xs font-semibold text-slate-800">
-              می‌توانید آزمایش را خودکار یا به صورت دستی انجام دهید:
+              حالت ارزیابی خودکار گام‌به‌گام (Hughson-Westlake):
             </span>
           </div>
           <button
+            type="button"
             onClick={startAutoTest}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold rounded-lg shadow-xs transition-colors"
+            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold rounded-lg shadow-xs transition-colors shrink-0"
           >
             <Play className="w-3.5 h-3.5" />
-            شروع تست خودکار گام‌به‌گام (Hughson-Westlake)
+            شروع تست خودکار
           </button>
         </div>
       )}
 
       {/* Manual Audiometer Controls Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
         
         {/* Frequency Panel */}
-        <div className="lg:col-span-5 flex flex-col justify-between p-4 bg-slate-50 rounded-xl border border-slate-200">
+        <div className="lg:col-span-5 flex flex-col justify-between p-3.5 sm:p-4 bg-slate-50 rounded-xl border border-slate-200">
           <div>
             <div className="flex items-center justify-between mb-3">
               <label className="text-xs font-bold text-slate-800 uppercase tracking-wide">
                 انتخاب فرکانس (Hz)
               </label>
-              <span className="text-xs font-mono font-bold text-teal-700 bg-teal-100 px-2 py-0.5 rounded">
-                {currentFreq} Hz
-              </span>
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={handlePrevFreq}
+                  disabled={STANDARD_FREQUENCIES.indexOf(currentFreq) === 0}
+                  title="فرکانس قبلی"
+                  className="p-1 rounded bg-white border border-slate-200 text-slate-600 disabled:opacity-40 hover:bg-slate-100 text-xs"
+                >
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+                <span className="text-xs font-mono font-bold text-teal-700 bg-teal-100 px-2 py-0.5 rounded">
+                  {currentFreq} Hz
+                </span>
+                <button
+                  type="button"
+                  onClick={handleNextFreq}
+                  disabled={STANDARD_FREQUENCIES.indexOf(currentFreq) === STANDARD_FREQUENCIES.length - 1}
+                  title="فرکانس بعدی"
+                  className="p-1 rounded bg-white border border-slate-200 text-slate-600 disabled:opacity-40 hover:bg-slate-100 text-xs"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                </button>
+              </div>
             </div>
 
             {/* Frequency Selection Buttons */}
@@ -364,8 +405,9 @@ export const AudiometerConsole: React.FC<AudiometerConsoleProps> = ({
                 return (
                   <button
                     key={`freq-btn-${freq}`}
+                    type="button"
                     onClick={() => setCurrentFreq(freq)}
-                    className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg border text-xs transition-all ${
+                    className={`flex flex-col items-center justify-center py-2 sm:py-2.5 px-1 rounded-xl border text-xs min-h-[44px] transition-all ${
                       isSelected
                         ? 'bg-slate-900 text-white border-slate-900 font-bold shadow-xs'
                         : hasValue
@@ -373,11 +415,13 @@ export const AudiometerConsole: React.FC<AudiometerConsoleProps> = ({
                         : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
                     }`}
                   >
-                    <span className="font-mono">{freq >= 1000 ? `${freq / 1000}k` : freq}</span>
-                    {hasValue && (
-                      <span className={`text-[10px] font-mono mt-0.5 ${isSelected ? 'text-teal-300' : 'text-teal-600'}`}>
+                    <span className="font-mono text-xs font-bold">{freq >= 1000 ? `${freq / 1000}k` : freq}</span>
+                    {hasValue ? (
+                      <span className={`text-[10px] font-mono mt-0.5 font-bold ${isSelected ? 'text-teal-300' : 'text-teal-600'}`}>
                         {currentThresholds[freq]}dB
                       </span>
+                    ) : (
+                      <span className="text-[9px] text-slate-400 mt-0.5">—</span>
                     )}
                   </button>
                 );
@@ -387,30 +431,32 @@ export const AudiometerConsole: React.FC<AudiometerConsoleProps> = ({
 
           {/* Tone Presentation Mode */}
           <div className="pt-3 border-t border-slate-200 flex items-center justify-between text-xs">
-            <span className="text-slate-600 font-medium">حالت ارائه تن:</span>
-            <div className="inline-flex rounded-md bg-slate-200 p-0.5">
+            <span className="text-slate-600 font-medium">حالت صوت:</span>
+            <div className="inline-flex rounded-lg bg-slate-200 p-0.5">
               <button
+                type="button"
                 onClick={() => setToneMode('pulse')}
                 className={`px-2.5 py-1 rounded text-xs transition-colors ${
                   toneMode === 'pulse' ? 'bg-white text-slate-900 font-semibold shadow-xs' : 'text-slate-600'
                 }`}
               >
-                پالس ۳ تایی (استاندارد)
+                پالس ۳ تایی
               </button>
               <button
+                type="button"
                 onClick={() => setToneMode('continuous')}
                 className={`px-2.5 py-1 rounded text-xs transition-colors ${
                   toneMode === 'continuous' ? 'bg-white text-slate-900 font-semibold shadow-xs' : 'text-slate-600'
                 }`}
               >
-                پیوسته (ممتد)
+                ممتد (پیوسته)
               </button>
             </div>
           </div>
         </div>
 
         {/* Intensity Panel (dB HL) */}
-        <div className="lg:col-span-7 flex flex-col justify-between p-4 bg-slate-50 rounded-xl border border-slate-200">
+        <div className="lg:col-span-7 flex flex-col justify-between p-3.5 sm:p-4 bg-slate-50 rounded-xl border border-slate-200">
           <div>
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
@@ -424,13 +470,13 @@ export const AudiometerConsole: React.FC<AudiometerConsoleProps> = ({
                   </span>
                 )}
               </div>
-              <div className="text-xl font-bold font-mono text-slate-900">
+              <div className="text-xl sm:text-2xl font-black font-mono text-slate-900">
                 {currentDb} <span className="text-xs text-slate-500 font-sans font-normal">dB HL</span>
               </div>
             </div>
 
             {/* Slider */}
-            <div className="my-4">
+            <div className="my-3 sm:my-4">
               <input
                 type="range"
                 min="-10"
@@ -438,82 +484,93 @@ export const AudiometerConsole: React.FC<AudiometerConsoleProps> = ({
                 step="5"
                 value={currentDb}
                 onChange={(e) => setCurrentDb(Number(e.target.value))}
-                className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-teal-600"
+                className="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-teal-600"
               />
               <div className="flex justify-between text-[10px] font-mono text-slate-400 mt-1">
-                <span>-10 dB (خیلی ضعیف)</span>
-                <span>20 dB (طبیعی)</span>
-                <span>50 dB (گفتار)</span>
-                <span>80 dB (بلند)</span>
-                <span>100 dB (حداکثر)</span>
+                <span>-10dB</span>
+                <span>20dB (نرمال)</span>
+                <span>50dB (گفتار)</span>
+                <span>80dB (بلند)</span>
+                <span>100dB</span>
               </div>
             </div>
 
-            {/* Stepper Buttons */}
-            <div className="flex items-center justify-center gap-2">
+            {/* Stepper Buttons: Touch-friendly layout */}
+            <div className="grid grid-cols-4 gap-2 my-2">
               <button
+                type="button"
                 onClick={() => stepDb(-10)}
-                className="px-3 py-1.5 text-xs font-semibold bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-100"
+                className="py-2.5 text-xs font-bold bg-white border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-100 active:bg-slate-200 transition-colors shadow-2xs"
               >
                 -10 dB
               </button>
               <button
+                type="button"
                 onClick={() => stepDb(-5)}
-                className="px-3 py-1.5 text-xs font-semibold bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-100"
+                className="py-2.5 text-xs font-bold bg-white border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-100 active:bg-slate-200 transition-colors shadow-2xs"
               >
                 -5 dB
               </button>
-              <span className="w-px h-6 bg-slate-300 mx-1"></span>
               <button
+                type="button"
                 onClick={() => stepDb(5)}
-                className="px-3 py-1.5 text-xs font-semibold bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-100"
+                className="py-2.5 text-xs font-bold bg-white border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-100 active:bg-slate-200 transition-colors shadow-2xs"
               >
                 +5 dB
               </button>
               <button
+                type="button"
                 onClick={() => stepDb(10)}
-                className="px-3 py-1.5 text-xs font-semibold bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-100"
+                className="py-2.5 text-xs font-bold bg-white border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-100 active:bg-slate-200 transition-colors shadow-2xs"
               >
                 +10 dB
               </button>
             </div>
           </div>
 
-          {/* Audio Presentation & Action Triggers */}
-          <div className="pt-4 mt-4 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
+          {/* Audio Presentation & Action Triggers: Responsive buttons */}
+          <div className="pt-3 sm:pt-4 mt-3 border-t border-slate-200 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3">
             <div className="flex items-center gap-2">
               {toneMode === 'pulse' ? (
                 <button
+                  type="button"
                   onClick={handleStartTone}
                   disabled={isPlaying}
-                  className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-xs transition-all shadow-sm ${
+                  className={`w-full sm:w-auto flex items-center justify-center gap-2 py-3 sm:py-2.5 px-5 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-sm ${
                     isPlaying
                       ? 'bg-amber-500 text-white animate-pulse'
-                      : 'bg-teal-600 hover:bg-teal-700 text-white'
+                      : 'bg-teal-600 hover:bg-teal-700 text-white active:scale-98'
                   }`}
                 >
-                  <Volume2 className="w-4 h-4" />
+                  <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" />
                   {isPlaying ? 'در حال پخش بوق...' : 'ارائه صوت (۳ بوق)'}
                 </button>
               ) : (
                 <button
+                  type="button"
                   onMouseDown={handleStartTone}
                   onMouseUp={handleStopTone}
-                  onTouchStart={handleStartTone}
-                  onTouchEnd={handleStopTone}
-                  className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-xs transition-all shadow-sm ${
+                  onTouchStart={(e) => {
+                    e.preventDefault();
+                    handleStartTone();
+                  }}
+                  onTouchEnd={(e) => {
+                    e.preventDefault();
+                    handleStopTone();
+                  }}
+                  className={`w-full sm:w-auto flex items-center justify-center gap-2 py-3 sm:py-2.5 px-5 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-sm select-none ${
                     isPlaying
-                      ? 'bg-amber-500 text-white'
+                      ? 'bg-amber-500 text-white scale-98'
                       : 'bg-teal-600 hover:bg-teal-700 text-white'
                   }`}
                 >
-                  <Volume2 className="w-4 h-4" />
-                  {isPlaying ? 'در حال پخش (کلید را رها کنید)' : 'پخش ممتد (نگه دارید)'}
+                  <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                  {isPlaying ? 'در حال پخش (رها کنید)' : 'پخش ممتد (نگه دارید)'}
                 </button>
               )}
 
-              <span className="text-[11px] text-slate-500 hidden sm:inline">
-                یا فشردن کلید <kbd className="px-1.5 py-0.5 bg-slate-200 rounded font-mono text-slate-700">Space</kbd>
+              <span className="text-[11px] text-slate-500 hidden md:inline">
+                یا کلید <kbd className="px-1.5 py-0.5 bg-slate-200 rounded font-mono text-slate-700">Space</kbd>
               </span>
             </div>
 
@@ -521,19 +578,21 @@ export const AudiometerConsole: React.FC<AudiometerConsoleProps> = ({
             <div className="flex items-center gap-2">
               {recordedVal !== null && (
                 <button
+                  type="button"
                   onClick={handleRemoveThreshold}
                   title="حذف آستانه ثبت‌شده این فرکانس"
-                  className="px-2.5 py-2 text-xs text-rose-600 hover:bg-rose-50 rounded-lg border border-rose-200"
+                  className="py-2.5 px-3 text-xs text-rose-600 hover:bg-rose-50 rounded-xl border border-rose-200 transition-colors"
                 >
-                  حذف آستانه
+                  حذف
                 </button>
               )}
 
               <button
+                type="button"
                 onClick={handleSetThreshold}
-                className="flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-lg transition-colors shadow-xs"
+                className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 py-2.5 sm:py-2.5 px-4 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow-xs active:scale-98"
               >
-                <Check className="w-3.5 h-3.5 text-teal-400" />
+                <Check className="w-4 h-4 text-teal-400" />
                 <span>ثبت آستانه ({currentDb} dB)</span>
               </button>
             </div>
@@ -544,20 +603,21 @@ export const AudiometerConsole: React.FC<AudiometerConsoleProps> = ({
       </div>
 
       {/* Threshold Overview Table */}
-      <div className="mt-5 pt-4 border-t border-slate-100">
+      <div className="mt-4 sm:mt-5 pt-3 sm:pt-4 border-t border-slate-100">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-bold text-slate-700">جدول آستانه‌های ثبت‌شده فعلی:</span>
           <button
+            type="button"
             onClick={onClearAll}
-            className="flex items-center gap-1 text-[11px] text-slate-500 hover:text-rose-600 font-medium"
+            className="flex items-center gap-1 text-[11px] text-slate-500 hover:text-rose-600 font-medium py-1 px-1.5"
           >
             <RotateCcw className="w-3 h-3" />
             پاکسازی تمام آستانه‌ها
           </button>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-xs text-center border-collapse">
+        <div className="overflow-x-auto touch-scroll-x border border-slate-200 rounded-xl">
+          <table className="w-full text-xs text-center border-collapse min-w-[500px]">
             <thead>
               <tr className="bg-slate-100 text-slate-700">
                 <th className="py-2 px-3 text-right font-semibold">فرکانس (Hz)</th>
@@ -572,7 +632,7 @@ export const AudiometerConsole: React.FC<AudiometerConsoleProps> = ({
               {/* Right Ear */}
               <tr className="border-b border-slate-100 bg-red-50/40">
                 <td className="py-2 px-3 text-right font-bold text-red-700 flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-red-600 inline-block"></span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-600 inline-block shrink-0"></span>
                   گوش راست (R)
                 </td>
                 {STANDARD_FREQUENCIES.map((f) => (
@@ -584,7 +644,7 @@ export const AudiometerConsole: React.FC<AudiometerConsoleProps> = ({
               {/* Left Ear */}
               <tr className="bg-blue-50/40">
                 <td className="py-2 px-3 text-right font-bold text-blue-700 flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 bg-blue-600 inline-block"></span>
+                  <span className="w-2.5 h-2.5 bg-blue-600 inline-block shrink-0"></span>
                   گوش چپ (L)
                 </td>
                 {STANDARD_FREQUENCIES.map((f) => (
