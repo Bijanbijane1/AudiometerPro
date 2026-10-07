@@ -1,0 +1,6 @@
+{
+  "name": "سامانه تخصصی شنوایی‌سنجی بالینی و گزارش ادیوگرام",
+  "description": "سامانه انجام تست کامل شنوایی‌سنجی (Pure-Tone Audiometry)، ثبت آستانه‌های شنوایی، رسم ادیوگرام و صدور و پرینت گزارش رسمی با مشخصات کامل بیمار",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
